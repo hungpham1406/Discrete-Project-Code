@@ -8,10 +8,12 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
 
+#LSTM model for Cross-model Usability
 #Load Data
-company = 'HGM'
-directory_load_data = 'HGM Historical Data Load excel.xlsx'
-directory_test_data = 'HGM Historical Data Test excel.xlsx'
+company1 = 'EVS' #Company that we use data to learn
+company2 = 'BCF' #Company that we predict the shareprice based on data of company1
+directory_load_data = 'EVS Historical Data Load excel.xlsx'
+directory_test_data = 'BCF Historical Data Test excel.xlsx'
 data = pd.read_excel(directory_load_data)
 
 #Prepare Data
@@ -69,28 +71,13 @@ x_test=np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 predicted_prices=model.predict(x_test)
 predicted_prices=scaler.inverse_transform(predicted_prices)
 
-# Plot the test predictions
-#plt.plot(actual_prices, color = "black", label=f"Actual {company} Price")
-#plt.plot(predicted_prices, color="green", label=f"Predicted {company} Price")
-#plt.title(f"{company} Share Price")
-#plt.xlabel("Time")
-#plt.ylabel(f"{company} Share Price")
-#plt.legend()
-#plt.show()
-plt.plot(actual_prices, color = "black", label=f"Actual {company} Price")
-plt.plot(predicted_prices, color="green", label=f"Predicted {company} Price")
-plt.title(f"{company} Share Price")
+
+plt.plot(actual_prices, color = "black", label=f"Actual {company2} Price using {company1} data")
+plt.plot(predicted_prices, color="green", label=f"Predicted {company2} Price using {company1} data")
+plt.title(f"{company2} Share Price")
 plt.xlabel("Time")
-plt.ylabel(f"{company} Share Price")
+plt.ylabel(f"{company2} Share Price")
 plt.legend()
 plt.show()
-#Predict Next Day
 
-real_data  = [model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs+1), 0]]
-real_data = np.array(real_data)
-real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1],1))
-
-prediction = model.predict(real_data)
-prediction = scaler.inverse_transform(prediction)
-print(f"Prediction: {prediction}")
 
